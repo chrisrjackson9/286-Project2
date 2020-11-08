@@ -467,8 +467,7 @@ void sim(ofstream &ofs)
             fetch(ofs, i);
             executeBranch(i);
 
-            ofs << endl
-                << endl;
+            ofs << endl;
             iss.clear();
             cycleNum++;
         }
@@ -485,8 +484,9 @@ void printCache(ofstream &ofs)
         {
             ofs << "\tEntry " << (j) << ":[(" << out[i][j][0] << "," << out[i][j][1] << "," << out[i][j][2] << ")<"
                 << outBin[i][j][0] << "," << outBin[i][j][1] << ">]" << endl;
+        
         }
-        ofs << endl;
+        
     }
 }
 
