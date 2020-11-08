@@ -425,13 +425,13 @@ void sim(ofstream &ofs)
                 << "\tEntry 0:" << postmem[0] << endl // << "Src1 " << bufferSrc1[9] << " Src2 " << bufferSrc2[9] << " Dest " << bufferDest[9] << endl
                 << endl;
 
-            ofs << "registers:";
+            ofs << "Registers:";
             for (int i = 0; i < 32; i++)
             {
                 if (i % 8 == 0)
                 {
                     ofs << endl
-                        << "r" << setw(2) << setfill('0') << i << ": \t" << REGISTERS[i] << "\t";
+                        << "R" << setw(2) << setfill('0') << i << ": \t" << REGISTERS[i] << "\t";
                 }
                 else
                     ofs << REGISTERS[i] << "\t ";
@@ -443,7 +443,7 @@ void sim(ofstream &ofs)
             printCache(ofs);
 
             ofs << endl
-                << "data:";
+                << "Data";
 
             mod = 8;
 
