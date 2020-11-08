@@ -484,9 +484,7 @@ void printCache(ofstream &ofs)
         {
             ofs << "\tEntry " << (j) << ":[(" << out[i][j][0] << "," << out[i][j][1] << "," << out[i][j][2] << ")<"
                 << outBin[i][j][0] << "," << outBin[i][j][1] << ">]" << endl;
-        
         }
-        
     }
 }
 
@@ -512,10 +510,10 @@ bool accessCache(ofstream &ofs, int address, int data = 0)
 
     if (!(way == 1 || way == 0))
     {
-        
+
         if (address < 96)
         {
-            
+
             missList[0] = address + 4;
             missList[1] = address + 8;
         }
@@ -620,13 +618,17 @@ void fetch(ofstream &ofs, int &address)
     bool add = true;
     for (int i = 0; i < 2; i++)
     {
-        if (accessCache(ofs, address))
+        if (SIM_INSTR[address].compare("Invalid Instruction") != 0)
         {
-        }
-        else
-        {
-            add = false;
-            address -= 4;
+
+            if (accessCache(ofs, address))
+            {
+            }
+            else
+            {
+                add = false;
+                address -= 4;
+            }
         }
     }
     if (add)
