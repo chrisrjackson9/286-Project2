@@ -1,0 +1,11 @@
+Name: Christopher Jackson
+Email: cjackae@siue.edu
+Number: 800640113
+
+Instructions: 
+    Run Makefile to compile pogram resulting in executable 'mipssim'. 
+    command to run mipssim: "./mipssim -i INPUTFILE -o OUTPUTFILE"
+
+Notes: 
+    The OUTPUTFILE matches closely for test file 1 except for a few minor cache issues.
+    The OUTPUTFILE for the other test files run successive instructions for a minimum of 10 clock cycles per file as required by the handout for the minimum 72 points.
