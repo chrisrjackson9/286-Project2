@@ -544,15 +544,34 @@ void missListUpdate(ofstream &ofs, int address)
 
     if (!(missList[0] == 0 && missList[1] == 0))
     {
-        if (LRU[index] == 0)
+        //cout << address << " " <<  out[index][0][2] << endl << tag << endl << endl;
+        if(out[index][0][2] == tag) {
+            outBin[index][0][0] = bit[missList[0]];
+            outBin[index][0][1] = bit[missList[1]];
+            out[index][0][0] = 1;
+            out[index][0][2] = tag;
+
+            if (out[index][0][1] == 0) {
+                out[index][0][1] = 1;
+            } else out[index][0][1] = 0;
+            
+        }  else if (out[index][1][2] == tag) {
+            outBin[index][1][0] = bit[missList[0]];
+            outBin[index][1][1] = bit[missList[1]];
+            out[index][1][0] = 1;
+            out[index][1][2] = tag;
+
+            if (out[index][1][1] == 0) {
+                out[index][1][1] = 1;
+            } else out[index][1][1] = 0;
+            
+        } else if (LRU[index] == 0)
         {
             
             outBin[index][0][0] = bit[missList[0]];
             outBin[index][0][1] = bit[missList[1]];
             out[index][0][0] = 1;
             out[index][0][2] = tag;
-
-
 
             if (preissue[0].size() == 0)
             {
@@ -800,6 +819,9 @@ void wb(ofstream &ofs)
     {
         iss >> rt >> immediate >> rs;
         sw(rt, immediate, rs);
+        missList[0] = immediate;
+        missList[1] = immediate + 4;
+        missListUpdate(ofs, immediate);
     }
 
     for (int i = 0; i < 2; i++)
