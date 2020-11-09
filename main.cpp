@@ -497,6 +497,8 @@ bool accessCache(ofstream &ofs, int address, int data = 0)
     int tag = addr >> 2;
     int way = -1;
 
+    
+
     if (out[index][0][0] == 1 && out[index][0][2] == tag)
     {
         way = 0;
@@ -513,9 +515,11 @@ bool accessCache(ofstream &ofs, int address, int data = 0)
 
         if (address < 96)
         {
-
             missList[0] = address + 4;
             missList[1] = address + 8;
+        } else if (DECODE[address].compare("BREAK") == 0) {
+            missList[0] = address - 4;
+            missList[1] = address;
         }
         else
         {
@@ -551,7 +555,8 @@ void missListUpdate(ofstream &ofs, int address)
             {
                 for (int i = 0; i < 2; i++)
                 {
-                    if (SIM_INSTR[address + (i * 4)].size() != 0 && SIM_INSTR[address + (i * 4)].compare("Invalid Instruction") && preissue[i].size() == 0 && !isBranch(address + (i * 4)) && SIM_INSTR[address + (i * 4)].compare("BREAK"))
+
+                    if (SIM_INSTR[address + (i * 4)].size() != 0 && SIM_INSTR[address + (i * 4)].compare("Invalid Instruction") && preissue[i].size() == 0 && isBranch(address + (i * 4)) == 0 && SIM_INSTR[address + (i * 4)].compare("BREAK"))
                     {
                         preissue[i] = "[" + SIM_INSTR[address + (i * 4)] + "]";
                         bufferDest[0 + i] = instructionDest[address + (i * 4)];
@@ -563,7 +568,7 @@ void missListUpdate(ofstream &ofs, int address)
             }
             else if (preissue[1].size() == 0)
             {
-                if (SIM_INSTR[address].size() != 0 && SIM_INSTR[address].compare("Invalid Instruction") && !isBranch(address) && SIM_INSTR[address].compare("BREAK"))
+                if (SIM_INSTR[address].size() != 0 && SIM_INSTR[address].compare("Invalid Instruction") && isBranch(address) == 0 && SIM_INSTR[address].compare("BREAK"))
                 {
                     preissue[1] = "[" + SIM_INSTR[address] + "]";
                     bufferDest[1] = instructionDest[address];
@@ -585,7 +590,7 @@ void missListUpdate(ofstream &ofs, int address)
             {
                 for (int i = 0; i < 2; i++)
                 {
-                    if (SIM_INSTR[address + (i * 4)].size() != 0 && SIM_INSTR[address + (i * 4)].compare("Invalid Instruction") && preissue[i].size() == 0 && !isBranch(address + (i * 4)) && SIM_INSTR[address + (i * 4)].compare("BREAK"))
+                    if (SIM_INSTR[address + (i * 4)].size() != 0 && SIM_INSTR[address + (i * 4)].compare("Invalid Instruction") && preissue[i].size() == 0 && isBranch(address + (i * 4)) == 0 && SIM_INSTR[address + (i * 4)].compare("BREAK"))
                     {
                         preissue[i] = "[" + SIM_INSTR[address + (i * 4)] + "]";
                         bufferDest[0 + i] = instructionDest[address + (i * 4)];
@@ -597,7 +602,7 @@ void missListUpdate(ofstream &ofs, int address)
             }
             else if (preissue[1].size() == 0)
             {
-                if (SIM_INSTR[address].size() != 0 && SIM_INSTR[address].compare("Invalid Instruction") && !isBranch(address) && SIM_INSTR[address].compare("BREAK"))
+                if (SIM_INSTR[address].size() != 0 && SIM_INSTR[address].compare("Invalid Instruction") && isBranch(address) == 0 && SIM_INSTR[address].compare("BREAK"))
                 {
                     preissue[1] = "[" + SIM_INSTR[address] + "]";
                     bufferDest[1] = instructionDest[address];
@@ -615,20 +620,33 @@ void missListUpdate(ofstream &ofs, int address)
 
 void fetch(ofstream &ofs, int &address)
 {
+    istringstream iss;
+    string instruction;
+    int target;
     bool add = true;
+
+    iss.str(DECODE[address]);
+    iss >> instruction;
+
+
     for (int i = 0; i < 2; i++)
     {
-        if (SIM_INSTR[address].compare("Invalid Instruction") != 0)
+        if (!instruction.compare("J") == 0)
         {
-
-            if (accessCache(ofs, address))
+            if (SIM_INSTR[address].compare("Invalid Instruction") != 0)
             {
+                if (accessCache(ofs, address))
+                {
+                }
+                else
+                {
+                    add = false;
+                    address -= 4;
+                }
             }
-            else
-            {
-                add = false;
-                address -= 4;
-            }
+        } else if (instruction.compare("J") == 0) {
+            iss >> target;
+            j(target, address);
         }
     }
     if (add)
@@ -946,7 +964,7 @@ bool isBranch(int address)
     iss >> instruction;
     if (instruction.compare("J") == 0 || instruction.compare("BLTZ") == 0 || instruction.compare("BEQ") == 0 || instruction.compare("JR") == 0)
     {
-
+        iss.clear();
         for (int i = 0; i < 10; i++)
         {
             if (branches[i].size() == 0)
