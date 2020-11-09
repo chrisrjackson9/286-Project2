@@ -500,12 +500,12 @@ bool accessCache(ofstream &ofs, int address, int data = 0)
     if (out[index][0][0] == 1 && out[index][0][2] == tag)
     {
         way = 0;
-        LRU[index] = 1;
+        //LRU[index] = 1;
     }
     else if (out[index][1][0] == 1 && out[index][1][2] == tag)
     {
         way = 1;
-        LRU[index] = 0;
+        //LRU[index] = 0;
     }
 
     if (!(way == 1 || way == 0))
@@ -546,10 +546,13 @@ void missListUpdate(ofstream &ofs, int address)
     {
         if (LRU[index] == 0)
         {
+            
             outBin[index][0][0] = bit[missList[0]];
             outBin[index][0][1] = bit[missList[1]];
             out[index][0][0] = 1;
             out[index][0][2] = tag;
+
+
 
             if (preissue[0].size() == 0)
             {
