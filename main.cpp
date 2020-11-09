@@ -497,8 +497,6 @@ bool accessCache(ofstream &ofs, int address, int data = 0)
     int tag = addr >> 2;
     int way = -1;
 
-    
-
     if (out[index][0][0] == 1 && out[index][0][2] == tag)
     {
         way = 0;
@@ -517,7 +515,9 @@ bool accessCache(ofstream &ofs, int address, int data = 0)
         {
             missList[0] = address + 4;
             missList[1] = address + 8;
-        } else if (DECODE[address].compare("BREAK") == 0) {
+        }
+        else if (DECODE[address].compare("BREAK") == 0)
+        {
             missList[0] = address - 4;
             missList[1] = address;
         }
@@ -628,7 +628,6 @@ void fetch(ofstream &ofs, int &address)
     iss.str(DECODE[address]);
     iss >> instruction;
 
-
     for (int i = 0; i < 2; i++)
     {
         if (!instruction.compare("J") == 0)
@@ -644,7 +643,9 @@ void fetch(ofstream &ofs, int &address)
                     address -= 4;
                 }
             }
-        } else if (instruction.compare("J") == 0) {
+        }
+        else if (instruction.compare("J") == 0)
+        {
             iss >> target;
             j(target, address);
         }
@@ -790,19 +791,28 @@ void wb(ofstream &ofs)
     string instruction;
     int rt, rs, sa, rd, immediate;
 
+    iss.str(DECODE[execute[9]]);
+        iss >> instruction;
+        if (instruction.compare("SW") == 0)
+        {
+            iss >> rt >> immediate >> rs;
+            sw(rt, immediate, rs);
+        }
     for (int i = 0; i < 2; i++)
     {
+        
         if (premem[0].size() != 0)
         {
             iss.str(DECODE[execute[7]]);
             iss >> instruction;
             if (instruction.compare("SW") == 0)
             {
-                iss >> rt >> immediate >> rs;
+                /* iss >> rt >> immediate >> rs;
                 sw(rt, immediate, rs);
                 missList[0] = immediate;
                 missList[1] = immediate + 4;
-                missListUpdate(ofs, immediate);
+                missListUpdate(ofs, immediate); */
+                execute[9] = execute[7];
                 premem[0] = "";
                 bufferDest[7] = -1;
                 bufferSrc1[7] = -1;
@@ -810,6 +820,7 @@ void wb(ofstream &ofs)
             }
             iss.clear();
         }
+
         if (postmem[0].size() != 0)
         {
             iss.str(DECODE[execute[9]]);
@@ -823,9 +834,6 @@ void wb(ofstream &ofs)
             {
                 iss >> rt >> immediate >> rs;
                 lw(rt, immediate, rs);
-                /* missList[0] = immediate;
-                missList[1] = immediate + 4;
-                missListUpdate(ofs, immediate); */
             }
             postmem[0] = "";
             bufferDest[9] = -1;
