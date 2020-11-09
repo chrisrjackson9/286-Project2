@@ -792,27 +792,29 @@ void wb(ofstream &ofs)
     int rt, rs, sa, rd, immediate;
 
     iss.str(DECODE[execute[9]]);
-        iss >> instruction;
-        if (instruction.compare("SW") == 0)
-        {
-            iss >> rt >> immediate >> rs;
-            sw(rt, immediate, rs);
-        }
+    iss >> instruction;
+    if (instruction.compare("SW") == 0)
+    {
+        iss >> rt >> immediate >> rs;
+        sw(rt, immediate, rs);
+    }
+
     for (int i = 0; i < 2; i++)
     {
-        
+
         if (premem[0].size() != 0)
         {
             iss.str(DECODE[execute[7]]);
             iss >> instruction;
             if (instruction.compare("SW") == 0)
             {
-                /* iss >> rt >> immediate >> rs;
-                sw(rt, immediate, rs);
+                iss >> rt >> immediate >> rs;
+                bit[immediate] = REGISTERS[rt];
                 missList[0] = immediate;
                 missList[1] = immediate + 4;
-                missListUpdate(ofs, immediate); */
+                missListUpdate(ofs, immediate);
                 execute[9] = execute[7];
+                execute[7] = -1;
                 premem[0] = "";
                 bufferDest[7] = -1;
                 bufferSrc1[7] = -1;
@@ -1008,7 +1010,6 @@ void addi(int rt, int rs, int immediate)
 void sw(int rt, int offset, int base)
 {
     SIM_DATA[REGISTERS[base] + offset] = REGISTERS[rt];
-    bit[offset] = SIM_DATA[REGISTERS[base] + offset];
 }
 
 void sh(int rt, int offset, int base)
