@@ -804,6 +804,14 @@ void mem(ofstream &ofs)
             memCount = 0;
         }
         memCount = 1;
+    } if (premem[0].size() == 0 && premem[1].size() != 0) {
+        premem[0] = premem[1];
+        premem[1] = "";
+        bufferDest[7] = bufferDest[8];
+            bufferSrc1[7] = bufferSrc1[8];
+            bufferSrc2[7] = bufferSrc2[8];
+            execute[7] = execute[8];
+
     }
 }
 
