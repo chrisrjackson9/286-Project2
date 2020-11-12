@@ -117,7 +117,7 @@ int main(int argc, char **argv)
         FD = open(argv[2], O_RDONLY);
         ofile = argv[4];
         disFile = ofile + "_dis.txt";
-        simFile = ofile + "_sim.txt";
+        simFile = ofile + "_pipeline.txt";
         isFileOpenForOutput(assembly, disFile);
         isFileOpenForOutput(simulator, simFile);
     }
@@ -545,29 +545,37 @@ void missListUpdate(ofstream &ofs, int address)
     if (!(missList[0] == 0 && missList[1] == 0))
     {
         //cout << address << " " <<  out[index][0][2] << endl << tag << endl << endl;
-        if(out[index][0][2] == tag) {
+        if (out[index][0][2] == tag)
+        {
             outBin[index][0][0] = bit[missList[0]];
             outBin[index][0][1] = bit[missList[1]];
             out[index][0][0] = 1;
             out[index][0][2] = tag;
 
-            if (out[index][0][1] == 0) {
+            if (out[index][0][1] == 0)
+            {
                 out[index][0][1] = 1;
-            } else out[index][0][1] = 0;
-            
-        }  else if (out[index][1][2] == tag) {
+            }
+            else
+                out[index][0][1] = 0;
+        }
+        else if (out[index][1][2] == tag)
+        {
             outBin[index][1][0] = bit[missList[0]];
             outBin[index][1][1] = bit[missList[1]];
             out[index][1][0] = 1;
             out[index][1][2] = tag;
 
-            if (out[index][1][1] == 0) {
+            if (out[index][1][1] == 0)
+            {
                 out[index][1][1] = 1;
-            } else out[index][1][1] = 0;
-            
-        } else if (LRU[index] == 0)
+            }
+            else
+                out[index][1][1] = 0;
+        }
+        else if (LRU[index] == 0)
         {
-            
+
             outBin[index][0][0] = bit[missList[0]];
             outBin[index][0][1] = bit[missList[1]];
             out[index][0][0] = 1;
@@ -804,14 +812,15 @@ void mem(ofstream &ofs)
             memCount = 0;
         }
         memCount = 1;
-    } if (premem[0].size() == 0 && premem[1].size() != 0) {
+    }
+    if (premem[0].size() == 0 && premem[1].size() != 0)
+    {
         premem[0] = premem[1];
         premem[1] = "";
         bufferDest[7] = bufferDest[8];
-            bufferSrc1[7] = bufferSrc1[8];
-            bufferSrc2[7] = bufferSrc2[8];
-            execute[7] = execute[8];
-
+        bufferSrc1[7] = bufferSrc1[8];
+        bufferSrc2[7] = bufferSrc2[8];
+        execute[7] = execute[8];
     }
 }
 
